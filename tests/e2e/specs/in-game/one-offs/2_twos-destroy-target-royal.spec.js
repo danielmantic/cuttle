@@ -245,4 +245,56 @@ describe('Play TWOS', () => {
       });
     });
   });
+
+
+  it('Plays TWO to Destroy Jacks using a stub for opponent resolution', () => {
+    cy.stubOpponentResolution(() => {
+      cy.resolveOpponent();
+    });
+    cy.loadGameFixture(0, {
+      p0Hand: [ Card.ACE_OF_SPADES, Card.TWO_OF_CLUBS ],
+      p0Points: [ Card.TEN_OF_SPADES ],
+      p0FaceCards: [],
+      p1Hand: [ Card.JACK_OF_CLUBS ],
+      p1Points: [],
+      p1FaceCards: [],
+    });
+    cy.get('[data-player-hand-card=1-3]').click();
+    cy.get('[data-move-choice=points]').click();
+    assertGameState(0, {
+      p0Hand: [ Card.TWO_OF_CLUBS ],
+      p0Points: [ Card.TEN_OF_SPADES, Card.ACE_OF_SPADES ],
+      p0FaceCards: [],
+      p1Hand: [ Card.JACK_OF_CLUBS ],
+      p1Points: [],
+      p1FaceCards: [],
+    });
+    cy.playJackOpponent(Card.JACK_OF_CLUBS, Card.ACE_OF_SPADES);
+    assertGameState(0, {
+      p0Hand: [ Card.TWO_OF_CLUBS ],
+      p0Points: [ Card.TEN_OF_SPADES ],
+      p0FaceCards: [],
+      p1Hand: [],
+      p1Points: [ Card.ACE_OF_SPADES ],
+      p1FaceCards: [],
+    });
+  
+    cy.get('[data-player-hand-card=2-0]').click();
+    cy.get('[data-move-choice=targetedOneOff]').click();
+    cy.get('#player-hand-targeting').should('be.visible');
+    cy.get('[data-opponent-face-card=11-0]').click();
+    cy.get('#waiting-for-opponent-counter-scrim').should('be.visible');
+    cy.get('@stubOpponentResolution').should('have.been.called');
+
+    assertGameState(0, {
+      p0Hand: [],
+      p0Points: [ Card.ACE_OF_SPADES, Card.TEN_OF_SPADES ],
+      p0FaceCards: [],
+      p1Hand: [],
+      p1Points: [],
+      p1FaceCards: [],
+      scrap: [ Card.TWO_OF_CLUBS, Card.JACK_OF_CLUBS ],
+    });
+    cy.get('[data-player-face-card=11-0]').should('not.exist');
+  });
 });

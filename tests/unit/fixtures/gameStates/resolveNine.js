@@ -141,3 +141,98 @@ export const resolveNine = {
     },
   },
 };
+
+const resolveKing = {
+  game: { ...gameFixture, gameStates: [ gameStateRow ] },
+  gameStateRow: {
+    ...gameStateRow,
+    playedCard: Card.KING_OF_SPADES,
+    targetCard: null,
+    p0Points: ['AH', 'TH'],
+    p0FaceCards: [Card.KING_OF_SPADES],
+    scrap: ['9C'],
+    resolved: Card.KING_OF_SPADES,
+  },
+  gameState: {
+    ...gameStateRow.gameState,
+    p0: {
+      hand: [],
+      points: [Card.ACE_OF_HEARTS, Card.TEN_OF_HEARTS],
+      faceCards: [Card.KING_OF_SPADES],
+    },
+    scrap: [Card.NINE_OF_CLUBS],
+    resolved: Card.KING_OF_SPADES,
+  },
+  socket: {
+    change: MoveType.RESOLVE,
+    happened: true,
+    oneOff: Card.KING_OF_SPADES,
+    pNum: 0,
+    playedBy: 0,
+    targetCardId: null,
+    game: {
+      ...gameFixture,
+      log: [
+        "The K♠️ face card resolves. The opponent cannot target you until it's removed.",
+      ],
+      scrap: [Card.NINE_OF_CLUBS],
+      resolved: Card.KING_OF_SPADES,
+    },
+    victory: {
+      conceded: false,
+      currentMatch: null,
+      gameOver: false,
+      winner: null,
+    },
+  },
+};
+
+const resolveTwoCounter = {
+  game: { ...gameFixture, gameStates: [gameStateRow] },
+  gameStateRow: {
+    ...gameStateRow,
+    playedCard: Card.NINE_OF_CLUBS,
+    targetCard: Card.SEVEN_OF_DIAMONDS,
+    p0Points: ['TH'],
+    p1Hand: ['2D'], // Player has a "TWO" counter card.
+    twos: [Card.TWO_OF_DIAMONDS],
+    scrap: ['9C', '2D'],
+  },
+  gameState: {
+    ...gameStateRow.gameState,
+    p0: {
+      hand: [],
+      points: [Card.TEN_OF_HEARTS],
+      faceCards: [],
+    },
+    p1: {
+      hand: [],
+      points: [],
+      faceCards: [],
+    },
+    twos: [Card.TWO_OF_DIAMONDS],
+    scrap: [Card.NINE_OF_CLUBS, Card.TWO_OF_DIAMONDS],
+    resolved: null,
+  },
+  socket: {
+    change: MoveType.COUNTER,
+    happened: true,
+    oneOff: Card.NINE_OF_CLUBS,
+    pNum: 1,
+    playedBy: 1,
+    targetCardId: '7D',
+    game: {
+      ...gameFixture,
+      log: [
+        "Player 1 counters the 9♣️ with a 2♦️. The one-off effect is negated.",
+      ],
+      scrap: [Card.NINE_OF_CLUBS, Card.TWO_OF_DIAMONDS],
+    },
+    victory: {
+      conceded: false,
+      currentMatch: null,
+      gameOver: false,
+      winner: null,
+    },
+  },
+};

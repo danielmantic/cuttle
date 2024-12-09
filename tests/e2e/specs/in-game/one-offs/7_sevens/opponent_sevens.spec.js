@@ -634,4 +634,71 @@ describe('Opponent playing SEVENS', () => {
       });
     });
   });
+
+
+  it('Opponent tries to play an invalid card from seven', () => {
+    cy.loadGameFixture(1, {
+      p0Hand: [Card.SEVEN_OF_CLUBS],
+      p0Points: [],
+      p0FaceCards: [],
+      p1Hand: [],
+      p1Points: [],
+      p1FaceCards: [],
+      topCard: Card.TWO_OF_DIAMONDS,
+      secondCard: Card.THREE_OF_HEARTS,
+    });
+    cy.playOneOffOpponent(Card.SEVEN_OF_CLUBS);
+    cy.get('[data-cy=cannot-counter-resolve]').should('be.visible').click();
+    cy.log('Player resolves (could not counter)');
+  
+    cy.get('[data-top-card=2-1]')
+      .should('exist')
+      .click({ force: true })
+      .should('not.have.class', 'selected');
+  
+    cy.get('[data-second-card=3-2]')
+      .should('exist')
+      .click({ force: true })
+      .should('not.have.class', 'selected');
+    assertGameState(1, {
+      p0Hand: [Card.SEVEN_OF_CLUBS],
+      p0Points: [],
+      p0FaceCards: [],
+      p1Hand: [],
+      p1Points: [],
+      p1FaceCards: [],
+      scrap: [],
+      topCard: Card.TWO_OF_DIAMONDS,
+    });
+  });
+
+
+  it('Opponent steals player points with jack from seven', () => {
+    cy.loadGameFixture(1, {
+      p0Hand: [Card.SEVEN_OF_CLUBS],
+      p0Points: [],
+      p0FaceCards: [],
+      p1Hand: [],
+      p1Points: [Card.TEN_OF_CLUBS],
+      p1FaceCards: [],
+      topCard: Card.JACK_OF_SPADES,
+      secondCard: Card.TWO_OF_CLUBS,
+    });
+  
+    cy.playOneOffOpponent(Card.SEVEN_OF_CLUBS);
+    cy.get('[data-cy=cannot-counter-resolve]').should('be.visible').click();
+  
+    cy.playJackFromSevenOpponent(Card.JACK_OF_SPADES, Card.TEN_OF_CLUBS);
+  
+    assertGameState(1, {
+      p0Hand: [],
+      p0Points: [Card.TEN_OF_CLUBS],
+      p0FaceCards: [],
+      p1Hand: [],
+      p1Points: [],
+      p1FaceCards: [],
+      scrap: [Card.SEVEN_OF_CLUBS],
+      topCard: Card.TWO_OF_CLUBS,
+    });
+  });
 });

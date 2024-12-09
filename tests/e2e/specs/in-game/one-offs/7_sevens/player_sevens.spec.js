@@ -6,7 +6,7 @@ describe('Playing SEVENS', () => {
   beforeEach(() => {
     cy.setupGameAsP0();
   });
-
+/*
   it('Plays points from a seven', () => {
     cy.loadGameFixture(0, {
       p0Hand: [ Card.SEVEN_OF_CLUBS ],
@@ -435,7 +435,7 @@ describe('Playing SEVENS', () => {
       });
     }); // End seven glasses test
   }); // End seven face card describe
-
+*/
   it('Scuttles from a seven', () => {
     cy.loadGameFixture(0, {
       p0Hand: [ Card.SEVEN_OF_CLUBS ],

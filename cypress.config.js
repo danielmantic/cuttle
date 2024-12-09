@@ -1,4 +1,5 @@
 const { defineConfig } = require('cypress');
+const codeCoverageTask = require('@cypress/code-coverage/task')
 
 const cypressConfig = {
   projectId: 'i8bxr8',
@@ -8,6 +9,10 @@ const cypressConfig = {
     specPattern: [ 'tests/e2e/specs/**/*.spec.js' ],
     excludeSpecPattern: [ 'test/e2e/specs/playground.spec.js' ],
     supportFile: 'tests/e2e/support/index.js',
+    setupNodeEvents(on, config) {
+      codeCoverageTask(on, config)
+      return config
+    }
   },
   env: {
     VITE_USE_GAMESTATE_API: process.env.VITE_USE_GAMESTATE_API,

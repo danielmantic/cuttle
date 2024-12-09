@@ -1,6 +1,7 @@
 import os from 'os';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
+import istanbul from 'vite-plugin-istanbul'
 
 // vite.config.mjs
 import { defineConfig, loadEnv } from 'vite';
@@ -31,6 +32,12 @@ export default defineConfig(({ mode }) => {
         autoImport: false,
         styles: { configFile: 'src/sass/variables.scss' },
       }),
+      istanbul({
+        include: 'src/*',
+        exclude: ['node_modules', 'test/'],
+        extension: [ '.js', '.ts', '.vue' ],
+        requireEnv: false
+      })
     ],
     resolve: {
       alias: {
